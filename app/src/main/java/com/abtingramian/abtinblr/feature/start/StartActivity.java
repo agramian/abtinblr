@@ -2,7 +2,9 @@ package com.abtingramian.abtinblr.feature.start;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.transition.Transition;
 
 import com.abtingramian.abtinblr.BaseActivity;
@@ -32,6 +34,10 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public Transition getEnterTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Fade fade = new Fade(Fade.IN);
+            return fade;
+        }
         return null;
     }
 
