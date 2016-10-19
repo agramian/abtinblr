@@ -3,11 +3,16 @@ package com.abtingramian.abtinblr.feature.start;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
 
+import com.abtingramian.abtinblr.BaseActivity;
 import com.abtingramian.abtinblr.R;
+import com.abtingramian.abtinblr.feature.home.HomeActivity;
 
-public class StartActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class StartActivity extends BaseActivity {
 
     public static Intent newIntent(Activity activity) {
         return new Intent(activity, StartActivity.class);
@@ -17,6 +22,17 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.sign_in)
+    void signIn() {
+        startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    @Override
+    public Transition getEnterTransition() {
+        return null;
     }
 
 }
