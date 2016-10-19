@@ -1,4 +1,4 @@
-package com.abtingramian.abtinblr;
+package com.abtingramian.abtinblr.feature.home;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,13 +11,13 @@ import android.view.MenuItem;
 
 import com.abtingramian.abtinblr.R;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private static final int MENU_SETTINGS = Menu.FIRST;
     Toolbar mToolbar;
 
     public static Intent newIntent(Activity activity) {
-        return new Intent(activity, MainActivity.class);
+        return new Intent(activity, HomeActivity.class);
     }
 
     @Override
