@@ -1,5 +1,7 @@
 package com.abtingramian.abtinblr;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MENU_SETTINGS = Menu.FIRST;
     Toolbar mToolbar;
+
+    public static Intent newIntent(Activity activity) {
+        return new Intent(activity, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
