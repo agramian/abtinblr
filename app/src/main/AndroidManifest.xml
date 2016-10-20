@@ -22,12 +22,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".feature.home.HomeActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".feature.start.StartActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".feature.home.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

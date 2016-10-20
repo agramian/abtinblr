@@ -3,18 +3,24 @@ package com.abtingramian.abtinblr.feature.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.View;
 
-import com.abtingramian.abtinblr.BaseActivity;
 import com.abtingramian.abtinblr.R;
+import com.abtingramian.abtinblr.base.SingleFragmentActivity;
 
-public class HomeActivity extends BaseActivity {
+import butterknife.BindView;
 
-    private static final int MENU_SETTINGS = Menu.FIRST;
-    Toolbar mToolbar;
+public class HomeActivity extends SingleFragmentActivity {
+
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.fab_button)
+    FloatingActionButton fab;
 
     public static Intent newIntent(Activity activity) {
         return new Intent(activity, HomeActivity.class);
@@ -23,25 +29,16 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_SETTINGS, 0, R.string.action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        return true;
+    protected void updateCurrentFragment() {
+        super.updateCurrentFragment();
+        fab.setVisibility(currentFragment instanceof IFab ? View.VISIBLE : View.GONE);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_SETTINGS:
-                Snackbar.make(findViewById(android.R.id.content), R.string.action_settings, Snackbar.LENGTH_LONG).show();
-        }
-        return super.onOptionsItemSelected(item);
+    protected int getLayoutResId() {
+        return R.layout.activity_home;
     }
-
 }

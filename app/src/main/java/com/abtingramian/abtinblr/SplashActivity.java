@@ -2,6 +2,7 @@ package com.abtingramian.abtinblr;
 
 import android.os.Bundle;
 
+import com.abtingramian.abtinblr.base.BaseActivity;
 import com.abtingramian.abtinblr.feature.home.HomeActivity;
 import com.abtingramian.abtinblr.feature.start.StartActivity;
 

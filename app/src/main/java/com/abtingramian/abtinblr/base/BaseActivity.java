@@ -1,4 +1,4 @@
-package com.abtingramian.abtinblr;
+package com.abtingramian.abtinblr.base;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.view.Gravity;
 import android.view.Window;
+
+import com.abtingramian.abtinblr.R;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -54,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public Transition getReenterTransition() {
-        return null;
+        return getExitTransition();
     }
 
     public Transition getReturnTransition() {
