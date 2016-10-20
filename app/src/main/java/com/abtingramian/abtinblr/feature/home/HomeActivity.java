@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.abtingramian.abtinblr.R;
 import com.abtingramian.abtinblr.base.SingleFragmentActivity;
+import com.abtingramian.abtinblr.util.DrawableUtil;
 
 import butterknife.BindView;
 
@@ -21,6 +23,7 @@ public class HomeActivity extends SingleFragmentActivity {
     ViewPager viewPager;
     @BindView(R.id.fab_button)
     FloatingActionButton fab;
+    HomePagerAdapter homePagerAdapter;
 
     public static Intent newIntent(Activity activity) {
         return new Intent(activity, HomeActivity.class);
@@ -29,16 +32,38 @@ public class HomeActivity extends SingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void updateCurrentFragment() {
-        super.updateCurrentFragment();
-        fab.setVisibility(currentFragment instanceof IFab ? View.VISIBLE : View.GONE);
+        homePagerAdapter = new HomePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(homePagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        setTabIcons();
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+            @Override
+            public void onPageSelected(int position) {
+                updateFabVisibility();
+                setTabIcons();
+            }
+        });
+        updateFabVisibility();
     }
 
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_home;
     }
+
+    private void setTabIcons() {
+        tabLayout.getTabAt(HomePagerAdapter.PAGE_HOME).setIcon(getTintedTabIcon(R.drawable.ic_account_balance_black_24dp, HomePagerAdapter.PAGE_HOME));
+        tabLayout.getTabAt(HomePagerAdapter.PAGE_SEARCH).setIcon(getTintedTabIcon(R.drawable.ic_search_black_24dp, HomePagerAdapter.PAGE_SEARCH));
+        tabLayout.getTabAt(HomePagerAdapter.PAGE_PROFILE).setIcon(getTintedTabIcon(R.drawable.ic_message_black_24dp, HomePagerAdapter.PAGE_PROFILE));
+        tabLayout.getTabAt(HomePagerAdapter.PAGE_ACCOUNT).setIcon(getTintedTabIcon(R.drawable.ic_person_black_24dp, HomePagerAdapter.PAGE_ACCOUNT));
+    }
+
+    private VectorDrawableCompat getTintedTabIcon(int tabIconResId, int iconTabPosition) {
+        return DrawableUtil.createVectorDrawable(getApplicationContext(), tabIconResId, (tabLayout.getSelectedTabPosition() == iconTabPosition) ? R.color.tab_active : R.color.tab_inactive);
+    }
+
+    private void updateFabVisibility() {
+        fab.setVisibility(homePagerAdapter.getItem(viewPager.getCurrentItem()) instanceof IFab ? View.VISIBLE : View.GONE);
+    }
+
 }
