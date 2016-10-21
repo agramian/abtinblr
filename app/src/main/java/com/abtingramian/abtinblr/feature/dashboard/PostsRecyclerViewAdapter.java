@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,26 +108,23 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
         public void configure(final Post post) {
             // set blog name
             author.setText(post.getBlogName());
+            // common vars
+            String titleText = "";
+            String bodyText = null;
+            String imageUrl = "";
             // set content based on post type
             if (post instanceof PhotoPost) {
                 PhotoPost photoPost = (PhotoPost) post;
-                body.setText(Html.fromHtml(photoPost.getCaption()));
-                image.setVisibility(View.VISIBLE);
-                title.setVisibility(View.GONE);
-                Glide.with(itemView.getContext())
-                        .load(photoPost.getPhotos().get(0).getSizes().get(0).getUrl())
-                        .placeholder(R.color.placeholder_color)
-                        .error(R.color.placeholder_color)
-                        .centerCrop()
-                        .into(image);
+                imageUrl = photoPost.getPhotos().get(0).getSizes().get(0).getUrl();
+                bodyText = photoPost.getCaption();
             } else if (post instanceof VideoPost) {
-
+                VideoPost videoPost = (VideoPost) post;
+                imageUrl = videoPost.getThumbnailUrl();
+                bodyText = videoPost.getCaption();
             } else if (post instanceof TextPost) {
                 TextPost textPost = (TextPost) post;
-                title.setText(textPost.getTitle());
-                title.setVisibility(View.VISIBLE);
-                body.setText(Html.fromHtml(textPost.getBody()));
-                image.setVisibility(View.GONE);
+                titleText = textPost.getTitle();
+                bodyText = textPost.getBody();
             } else if (post instanceof LinkPost) {
                 // TODO
             } else if (post instanceof AudioPost) {
@@ -136,6 +136,25 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             } else if (post instanceof AnswerPost) {
                 // TODO
             }
+            // load content and set visibility based on vars
+            if (!TextUtils.isEmpty(titleText)) {
+                title.setText(titleText);
+                title.setVisibility(View.VISIBLE);
+            } else {
+                title.setVisibility(View.GONE);
+            }
+            if (!TextUtils.isEmpty(titleText)) {
+                body.setText(Html.fromHtml(bodyText));
+                body.setVisibility(View.VISIBLE);
+            } else {
+                body.setVisibility(View.GONE);
+            }
+            Glide.with(itemView.getContext())
+                    .load(imageUrl)
+                    .placeholder(R.color.placeholder_color)
+                    .error(R.color.placeholder_color)
+                    .centerCrop()
+                    .into(image);
         }
     }
 

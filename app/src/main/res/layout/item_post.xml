@@ -50,7 +50,6 @@
         style="@style/PostText.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         tools:text="Title"/>
 
     <TextView
