@@ -3,6 +3,8 @@ package com.abtingramian.abtinblr.feature.dashboard;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindString;
+import butterknife.BindView;
 
 public class DashboardFragment extends BaseFragment implements SingleFragmentActivity.IFab {
 
@@ -29,10 +32,17 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     @BindString(R.string.tumblr_consumer_secret) String consumerSecret;
     @BindString(R.string.tumblr_token) String token;
     @BindString(R.string.tumblr_token_secret) String tokenSecret;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.posts_recyclerview)
+    RecyclerView recyclerView;
+    @BindView(R.id.loading_posts)
+    View loading;
     JumblrClient client;
     Map<String, Integer> options = new HashMap<>();
     int offset = 0;
     int limit = 20;
+    boolean isFetchingPosts = false;
 
     public static DashboardFragment newInstance() {
         Bundle args = new Bundle();
@@ -44,7 +54,7 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_placeholder, container, false);
+        return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
     @Override
@@ -62,15 +72,33 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
         options.put("offset", offset);
         // request for posts
         fetchPosts();
+        // swipe refresh
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!isFetchingPosts) {
+                    // refresh from top so update offset then fetch posts
+                    offset = 0;
+                    fetchPosts();
+                } else {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
     }
 
     private void fetchPosts() {
+        isFetchingPosts = true;
         new AsyncTask<Void, Void, List<Post>>() {
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                // TODO show loading if necessary
+                // show loading bar base if this was not triggered by swipe to refresh
+                if (!swipeRefreshLayout.isRefreshing()) {
+                    loading.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -83,13 +111,25 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
             protected void onPostExecute(List<Post> posts) {
                 super.onPostExecute(posts);
                 if (posts != null && !posts.isEmpty()) {
-                    // TODO populate recyclerview
+                    if (offset == 0) {
+                        // replace since this is the intial load or swipe to refresh
+                    } else {
+                        // append to bottom
+                    }
                 } else if (getActivity() instanceof HomeActivity){
                     // if no posts returned check connection to show toast if necessary
                     ((HomeActivity) getActivity()).checkConnection();
                 }
                 // update offset
                 offset += posts != null ? posts.size() : 0;
+                // update refreshing state
+                if (loading != null) {
+                    loading.setVisibility(View.GONE);
+                }
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                isFetchingPosts = false;
             }
         }.execute();
     }
