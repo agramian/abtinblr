@@ -6,6 +6,7 @@ import android.test.InstrumentationTestCase;
 
 import com.abtingramian.abtinblr.R;
 import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.User;
 
 import org.junit.After;
@@ -15,6 +16,10 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JumblrTest extends InstrumentationTestCase {
@@ -54,9 +59,31 @@ public class JumblrTest extends InstrumentationTestCase {
 
     @Test
     public void test_01_user_name() {
-        // Make the request
         User user = client.user();
         assertNotNull(user.getName());
+    }
+
+    @Test
+    public void test_02_user_dashboard() {
+        List<Post> posts = client.userDashboard();
+        assertNotNull(posts);
+    }
+
+    @Test
+    public void test_03_tagged_posts() {
+        List<Post> posts = client.tagged("lol");
+        assertNotNull(posts);
+        assert(posts.size() > 0);
+    }
+
+    @Test
+    public void test_04_tagged_posts_pagination() {
+        Map<String, Integer> options = new HashMap<String, Integer>();
+        options.put("limit", 20);
+        options.put("offset", 20);
+        List<Post> posts = client.tagged("lol");
+        assertNotNull(posts);
+        assert(posts.size() > 0);
     }
 
 }
