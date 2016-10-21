@@ -8,4 +8,10 @@
     <string name="account">Account</string>
     <string name="sign_out_confirmation">Are you sure you want to sign out?</string>
     <string name="offline_mode">You are in offline mode</string>
+    <string name="tumblr_consumer_key">zs5ENITKr0prFWdnbuDFrI7BreM5XnLQ5srYeGW8Q86e9k0oCX</string>
+    <string name="tumblr_consumer_secret">cjSUtYzx1g3FZ1GVGuDJxDzG3lAKDBaN7tl5aTUq49yNEaEMBj</string>
+    <string name="tumblr_callback_url">https://github.com/agramian/abtinblr</string>
+    <string name="tumblr_token">umKcZgqz6FxY33FJhC7CMwZjUrgRCt4EgTf9N0cPN5heyVsXct</string>
+    <string name="tumblr_token_secret">nsogxNBTUV4Q7FeOiu26ROn7TE4adKgMqcaPm91VxS1zy2m8GE</string>
+    <string name="tumblr_api_key">zs5ENITKr0prFWdnbuDFrI7BreM5XnLQ5srYeGW8Q86e9k0oCX</string>
 </resources>
