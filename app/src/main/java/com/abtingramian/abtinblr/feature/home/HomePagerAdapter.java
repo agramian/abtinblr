@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.abtingramian.abtinblr.feature.placeholder.AccountFragment;
 import com.abtingramian.abtinblr.feature.placeholder.PlaceholderFragment;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
@@ -21,6 +22,8 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
+            case PAGE_ACCOUNT:
+                return AccountFragment.newInstance();
             default:
                 return PlaceholderFragment.newInstance();
         }

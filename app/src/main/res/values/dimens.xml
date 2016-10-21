@@ -12,4 +12,8 @@
     <dimen name="text_size_medium">12dp</dimen>
     <dimen name="text_size_large">16dp</dimen>
     <dimen name="text_size_x_large">20dp</dimen>
+    <dimen name="text_size_xx_large">24dp</dimen>
+    <dimen name="drawable_padding">4dp</dimen>
+    <dimen name="divider_thickness">1dp</dimen>
+    <dimen name="row_height">56dp</dimen>
 </resources>
