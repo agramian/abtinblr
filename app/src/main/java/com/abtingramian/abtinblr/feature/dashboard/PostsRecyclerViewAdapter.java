@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +77,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
     public void addItems(List<Post> posts) {
         int rangeStart = getItemCount();
         postList.addAll(posts);
-        notifyItemRangeInserted(rangeStart, postList.size() - 1);
+        notifyItemRangeInserted(rangeStart, posts.size());
     }
 
     public void removeItem(int position) {
@@ -143,18 +141,23 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             } else {
                 title.setVisibility(View.GONE);
             }
-            if (!TextUtils.isEmpty(titleText)) {
+            if (!TextUtils.isEmpty(bodyText)) {
                 body.setText(Html.fromHtml(bodyText));
                 body.setVisibility(View.VISIBLE);
             } else {
                 body.setVisibility(View.GONE);
             }
-            Glide.with(itemView.getContext())
-                    .load(imageUrl)
-                    .placeholder(R.color.placeholder_color)
-                    .error(R.color.placeholder_color)
-                    .centerCrop()
-                    .into(image);
+            if (!TextUtils.isEmpty(imageUrl)) {
+                image.setVisibility(View.VISIBLE);
+                Glide.with(itemView.getContext())
+                        .load(imageUrl)
+                        .placeholder(R.color.placeholder_color)
+                        .error(R.color.placeholder_color)
+                        .fitCenter()
+                        .into(image);
+            } else {
+                image.setVisibility(View.GONE);
+            }
         }
     }
 

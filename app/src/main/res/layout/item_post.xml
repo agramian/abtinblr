@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/post_image_min_height"
         android:background="@color/placeholder_color"
+        android:adjustViewBounds="true"
         tools:layout_height="200dp"/>
 
     <TextView

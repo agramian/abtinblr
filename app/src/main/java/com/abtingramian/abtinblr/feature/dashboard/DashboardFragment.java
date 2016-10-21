@@ -16,6 +16,7 @@ import com.abtingramian.abtinblr.base.SingleFragmentActivity;
 import com.abtingramian.abtinblr.feature.home.HomeActivity;
 import com.abtingramian.abtinblr.util.SnackbarUtil;
 import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.Post;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 
 public class DashboardFragment extends BaseFragment implements SingleFragmentActivity.IFab {
 
-    static final String POST_TAG = "lol";
+    static final String TEST_BLOG = "ifpaintingscouldtext.tumblr.com";
 
     @BindString(R.string.tumblr_consumer_key) String consumerKey;
     @BindString(R.string.tumblr_consumer_secret) String consumerSecret;
@@ -40,6 +41,7 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     @BindView(R.id.loading_posts)
     View loading;
     PostsRecyclerViewAdapter postsAdapter;
+    LinearLayoutManager layoutManager;
     JumblrClient client;
     Map<String, Integer> options = new HashMap<>();
     int offset = 0;
@@ -63,10 +65,26 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // set up recycler view
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
         postsAdapter = new PostsRecyclerViewAdapter();
         recyclerView.setAdapter(postsAdapter);
-        // initialize tumblr client
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // if the user has scrolled to the bottom, fetch more posts
+                if (!isFetchingPosts && layoutManager.findLastVisibleItemPosition() == postsAdapter.getItemCount() - 1) {
+                    fetchPosts();
+                }
+            }
+        });
+        // initialize tumblr client and blog to use for content
         try {
             client = new JumblrClient(consumerKey, consumerSecret);
             client.setToken(token, tokenSecret);
@@ -110,7 +128,7 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
             @Override
             protected List<Post> doInBackground(Void... params) {
                 options.put("offset", offset);
-                return client != null ? client.tagged(POST_TAG, options) : null;
+                return client != null ? client.blogPosts(TEST_BLOG, options) : null;
             }
 
             @Override
