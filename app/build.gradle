@@ -87,6 +87,8 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:${okhttpLibVer}"
     compile "com.jakewharton:butterknife:${butterknifeLibVer}"
     apt "com.jakewharton:butterknife-compiler:${butterknifeLibVer}"
+    compile 'de.devland.esperandro:esperandro-api:2.2.0'
+    apt 'de.devland.esperandro:esperandro:2.2.0'
 
     // leak canary
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryLibVer}"

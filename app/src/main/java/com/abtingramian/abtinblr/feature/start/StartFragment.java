@@ -11,18 +11,28 @@ import android.view.ViewGroup;
 
 import com.abtingramian.abtinblr.R;
 import com.abtingramian.abtinblr.base.BaseFragment;
+import com.abtingramian.abtinblr.cache.UserCache;
 import com.abtingramian.abtinblr.feature.home.HomeActivity;
 import com.abtingramian.abtinblr.util.SnackbarUtil;
 
 import butterknife.OnClick;
+import de.devland.esperandro.Esperandro;
 
 public class StartFragment extends BaseFragment {
+
+    UserCache userCache;
 
     public static StartFragment newInstance() {
         Bundle args = new Bundle();
         StartFragment fragment = new StartFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userCache = Esperandro.getPreferences(UserCache.class, getContext().getApplicationContext());
     }
 
     @Nullable
@@ -38,6 +48,7 @@ public class StartFragment extends BaseFragment {
 
     @OnClick(R.id.sign_in)
     void signIn() {
+        userCache.loggedIn(true);
         startActivity(HomeActivity.newIntent(getActivity()));
     }
 

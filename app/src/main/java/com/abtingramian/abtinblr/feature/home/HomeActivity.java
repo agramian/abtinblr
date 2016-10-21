@@ -26,7 +26,7 @@ public class HomeActivity extends SingleFragmentActivity {
     HomePagerAdapter homePagerAdapter;
 
     public static Intent newIntent(Activity activity) {
-        return new Intent(activity, HomeActivity.class);
+        return new Intent(activity, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override
