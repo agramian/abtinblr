@@ -55,7 +55,7 @@ public class AccountFragment extends BaseFragment {
     @OnClick(R.id.sign_out)
     void signOut() {
         userCache.loggedIn(false);
-        getActivity().finish();
+        getActivity().supportFinishAfterTransition();
     }
 
 }
