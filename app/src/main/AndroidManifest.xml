@@ -27,7 +27,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".feature.home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".feature.start.StartActivity"/>
     </application>
 
 </manifest>

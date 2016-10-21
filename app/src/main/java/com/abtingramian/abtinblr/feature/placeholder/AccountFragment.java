@@ -1,7 +1,9 @@
 package com.abtingramian.abtinblr.feature.placeholder;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +56,17 @@ public class AccountFragment extends BaseFragment {
 
     @OnClick(R.id.sign_out)
     void signOut() {
-        userCache.loggedIn(false);
-        getActivity().supportFinishAfterTransition();
+        new AlertDialog.Builder(getActivity(), R.style.AlertDialog)
+                .setMessage(R.string.sign_out_confirmation)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        userCache.loggedIn(false);
+                        getActivity().supportFinishAfterTransition();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
 }
