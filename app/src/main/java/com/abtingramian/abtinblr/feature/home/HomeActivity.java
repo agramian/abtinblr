@@ -47,6 +47,11 @@ public class HomeActivity extends SingleFragmentActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected int getLayoutResId() {
         return R.layout.activity_home;
     }
