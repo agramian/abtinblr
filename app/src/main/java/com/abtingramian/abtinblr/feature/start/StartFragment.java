@@ -54,7 +54,7 @@ public class StartFragment extends BaseFragment {
 
     @OnClick(R.id.get_started)
     void getStarted() {
-        SnackbarUtil.showSnackbar(getContext().getApplicationContext(), getView(), R.string.coming_soon);
+        SnackbarUtil.showSnackbarLong(getContext().getApplicationContext(), getView(), R.string.coming_soon);
     }
 
     @Override
