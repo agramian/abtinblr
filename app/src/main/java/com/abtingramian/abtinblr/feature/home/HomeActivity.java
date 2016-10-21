@@ -16,6 +16,7 @@ import com.abtingramian.abtinblr.util.DrawableUtil;
 import com.abtingramian.abtinblr.util.SnackbarUtil;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class HomeActivity extends SingleFragmentActivity {
 
@@ -45,17 +46,18 @@ public class HomeActivity extends SingleFragmentActivity {
             public void onPageSelected(int position) {
                 updateFabVisibility();
                 setTabIcons();
+                checkConnection();
             }
         });
+        // fab button
+        fab.setImageDrawable(DrawableUtil.createVectorDrawable(this, R.drawable.ic_create_black_24dp, R.color.button_text_color));
         updateFabVisibility();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!ConnectionStateUtil.isConnected(getApplicationContext())) {
-            SnackbarUtil.showSnackbarIndefinite(getApplicationContext(), mainContent, R.string.offline_mode);
-        }
+        checkConnection();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class HomeActivity extends SingleFragmentActivity {
     }
 
     private void setTabIcons() {
-        tabLayout.getTabAt(HomePagerAdapter.PAGE_HOME).setIcon(getTintedTabIcon(R.drawable.ic_account_balance_black_24dp, HomePagerAdapter.PAGE_HOME));
+        tabLayout.getTabAt(HomePagerAdapter.PAGE_DASHBOARD).setIcon(getTintedTabIcon(R.drawable.ic_account_balance_black_24dp, HomePagerAdapter.PAGE_DASHBOARD));
         tabLayout.getTabAt(HomePagerAdapter.PAGE_SEARCH).setIcon(getTintedTabIcon(R.drawable.ic_search_black_24dp, HomePagerAdapter.PAGE_SEARCH));
         tabLayout.getTabAt(HomePagerAdapter.PAGE_PROFILE).setIcon(getTintedTabIcon(R.drawable.ic_message_black_24dp, HomePagerAdapter.PAGE_PROFILE));
         tabLayout.getTabAt(HomePagerAdapter.PAGE_ACCOUNT).setIcon(getTintedTabIcon(R.drawable.ic_person_black_24dp, HomePagerAdapter.PAGE_ACCOUNT));
@@ -80,7 +82,20 @@ public class HomeActivity extends SingleFragmentActivity {
     }
 
     private void updateFabVisibility() {
-        fab.setVisibility(homePagerAdapter.getItem(viewPager.getCurrentItem()) instanceof IFab ? View.VISIBLE : View.GONE);
+        fab.setVisibility(homePagerAdapter.getCurrentFragment() instanceof IFab ? View.VISIBLE : View.GONE);
+    }
+
+    public void checkConnection() {
+        if (!ConnectionStateUtil.isConnected(getApplicationContext())) {
+            SnackbarUtil.showSnackbarIndefinite(getApplicationContext(), mainContent, R.string.offline_mode);
+        }
+    }
+
+    @OnClick(R.id.fab_button)
+    void fabClicked() {
+        if (homePagerAdapter.getCurrentFragment() instanceof IFab) {
+            ((IFab) homePagerAdapter.getCurrentFragment()).onFabClicked();
+        }
     }
 
 }
