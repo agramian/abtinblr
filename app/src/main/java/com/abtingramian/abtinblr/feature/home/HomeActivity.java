@@ -11,12 +11,16 @@ import android.view.View;
 
 import com.abtingramian.abtinblr.R;
 import com.abtingramian.abtinblr.base.SingleFragmentActivity;
+import com.abtingramian.abtinblr.util.ConnectionStateUtil;
 import com.abtingramian.abtinblr.util.DrawableUtil;
+import com.abtingramian.abtinblr.util.SnackbarUtil;
 
 import butterknife.BindView;
 
 public class HomeActivity extends SingleFragmentActivity {
 
+    @BindView(R.id.main_content)
+    View mainContent;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
     @BindView(R.id.view_pager)
@@ -44,6 +48,14 @@ public class HomeActivity extends SingleFragmentActivity {
             }
         });
         updateFabVisibility();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!ConnectionStateUtil.isConnected(getApplicationContext())) {
+            SnackbarUtil.showSnackbarIndefinite(getApplicationContext(), mainContent, R.string.offline_mode);
+        }
     }
 
     @Override
