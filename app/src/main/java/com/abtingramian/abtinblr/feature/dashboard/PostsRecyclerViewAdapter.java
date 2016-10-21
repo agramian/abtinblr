@@ -3,6 +3,7 @@ package com.abtingramian.abtinblr.feature.dashboard;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.abtingramian.abtinblr.R;
+import com.bumptech.glide.Glide;
+import com.tumblr.jumblr.types.AnswerPost;
+import com.tumblr.jumblr.types.AudioPost;
+import com.tumblr.jumblr.types.ChatPost;
+import com.tumblr.jumblr.types.LinkPost;
+import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
+import com.tumblr.jumblr.types.QuotePost;
+import com.tumblr.jumblr.types.TextPost;
+import com.tumblr.jumblr.types.VideoPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,10 +90,12 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
         ImageView avatar;
         @BindView(R.id.post_author)
         TextView author;
-        @BindView(R.id.post_text)
-        TextView text;
         @BindView(R.id.post_image)
         ImageView image;
+        @BindView(R.id.post_title)
+        TextView title;
+        @BindView(R.id.post_body)
+        TextView body;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -91,8 +103,39 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
         }
 
         public void configure(final Post post) {
-            author.setText(post.getAuthorId());
-            text.setText(post.getSourceTitle());
+            // set blog name
+            author.setText(post.getBlogName());
+            // set content based on post type
+            if (post instanceof PhotoPost) {
+                PhotoPost photoPost = (PhotoPost) post;
+                body.setText(Html.fromHtml(photoPost.getCaption()));
+                image.setVisibility(View.VISIBLE);
+                title.setVisibility(View.GONE);
+                Glide.with(itemView.getContext())
+                        .load(photoPost.getPhotos().get(0).getSizes().get(0).getUrl())
+                        .placeholder(R.color.placeholder_color)
+                        .error(R.color.placeholder_color)
+                        .centerCrop()
+                        .into(image);
+            } else if (post instanceof VideoPost) {
+
+            } else if (post instanceof TextPost) {
+                TextPost textPost = (TextPost) post;
+                title.setText(textPost.getTitle());
+                title.setVisibility(View.VISIBLE);
+                body.setText(Html.fromHtml(textPost.getBody()));
+                image.setVisibility(View.GONE);
+            } else if (post instanceof LinkPost) {
+                // TODO
+            } else if (post instanceof AudioPost) {
+                // TODO
+            } else if (post instanceof QuotePost) {
+                // TODO
+            } else if (post instanceof ChatPost) {
+                // TODO
+            } else if (post instanceof AnswerPost) {
+                // TODO
+            }
         }
     }
 

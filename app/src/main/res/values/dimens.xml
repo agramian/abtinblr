@@ -19,4 +19,5 @@
     <dimen name="divider_thickness">1dp</dimen>
     <dimen name="row_height">56dp</dimen>
     <dimen name="avatar_size">24dp</dimen>
+    <dimen name="post_image_min_height">200dp</dimen>
 </resources>

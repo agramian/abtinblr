@@ -66,5 +66,17 @@
         <item name="colorAccent">@color/color_primary_dark</item>
         <item name="colorControlHighlight">@color/color_primary_dark</item>
     </style>
+    <style name="PostText">
+        <item name="android:layout_marginLeft">@dimen/activity_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_margin</item>
+    </style>
+    <style name="PostText.Title">
+        <item name="android:textColor">@color/post_title_text</item>
+        <item name="android:textSize">@dimen/text_size_xx_large</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="PostText.Body">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
 </resources>
 

@@ -90,6 +90,8 @@ dependencies {
     compile 'de.devland.esperandro:esperandro-api:2.2.0'
     apt 'de.devland.esperandro:esperandro:2.2.0'
     compile 'com.tumblr:jumblr:0.0.11'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "com.android.support:support-v4:${supportLibVer}"
 
     // leak canary
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryLibVer}"

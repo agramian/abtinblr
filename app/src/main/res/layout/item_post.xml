@@ -37,16 +37,27 @@
 
     <include layout="@layout/divider"/>
 
-    <TextView
-        android:id="@+id/post_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <ImageView
         android:id="@+id/post_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/post_image_min_height"
         android:background="@color/placeholder_color"
         tools:layout_height="200dp"/>
+
+    <TextView
+        android:id="@+id/post_title"
+        style="@style/PostText.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        tools:text="Title"/>
+
+    <TextView
+        android:id="@+id/post_body"
+        style="@style/PostText.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="This is the caption or body"/>
 
 </LinearLayout>

@@ -17,4 +17,5 @@
     <color name="post_background">#FFF</color>
     <color name="placeholder_color">#666666</color>
     <color name="snackbar_background_color">#CC666666</color>
+    <color name="post_title_text">#000</color>
 </resources>
