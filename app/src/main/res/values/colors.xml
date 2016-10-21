@@ -14,4 +14,7 @@
     <color name="divider">@color/tab_inactive</color>
     <color name="row_text_header">#33FFFFFF</color>
     <color name="row_text">#FFF</color>
+    <color name="post_background">#FFF</color>
+    <color name="placeholder_color">#666666</color>
+    <color name="snackbar_background_color">#CC666666</color>
 </resources>

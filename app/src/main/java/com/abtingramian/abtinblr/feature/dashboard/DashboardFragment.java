@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     RecyclerView recyclerView;
     @BindView(R.id.loading_posts)
     View loading;
+    PostsRecyclerViewAdapter postsAdapter;
     JumblrClient client;
     Map<String, Integer> options = new HashMap<>();
     int offset = 0;
@@ -60,6 +62,10 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // set up recycler view
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        postsAdapter = new PostsRecyclerViewAdapter();
+        recyclerView.setAdapter(postsAdapter);
         // initialize tumblr client
         try {
             client = new JumblrClient(consumerKey, consumerSecret);
@@ -113,8 +119,10 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
                 if (posts != null && !posts.isEmpty()) {
                     if (offset == 0) {
                         // replace since this is the intial load or swipe to refresh
+                        postsAdapter.setAllItems(posts);
                     } else {
                         // append to bottom
+                        postsAdapter.addItems(posts);
                     }
                 } else if (getActivity() instanceof HomeActivity){
                     // if no posts returned check connection to show toast if necessary

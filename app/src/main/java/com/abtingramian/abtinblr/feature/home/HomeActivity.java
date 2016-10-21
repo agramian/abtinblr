@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -82,7 +83,7 @@ public class HomeActivity extends SingleFragmentActivity {
     }
 
     private void updateFabVisibility() {
-        fab.setVisibility(homePagerAdapter.getCurrentFragment() instanceof IFab ? View.VISIBLE : View.GONE);
+        fab.setVisibility(homePagerAdapter.getItem(viewPager.getCurrentItem()) instanceof IFab ? View.VISIBLE : View.GONE);
     }
 
     public void checkConnection() {
@@ -93,9 +94,13 @@ public class HomeActivity extends SingleFragmentActivity {
 
     @OnClick(R.id.fab_button)
     void fabClicked() {
-        if (homePagerAdapter.getCurrentFragment() instanceof IFab) {
-            ((IFab) homePagerAdapter.getCurrentFragment()).onFabClicked();
+        if (getCurrentFragment() instanceof IFab) {
+            ((IFab) getCurrentFragment()).onFabClicked();
         }
+    }
+
+    private Fragment getCurrentFragment() {
+        return (Fragment) homePagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
     }
 
 }

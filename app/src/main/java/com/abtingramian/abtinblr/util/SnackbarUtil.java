@@ -26,7 +26,7 @@ public class SnackbarUtil {
 
     public static void showSnackbar(@NonNull Context context, @NonNull View view, @StringRes int messageResId, int length) {
         Snackbar snackbar = Snackbar.make(view, messageResId, length);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.button_color_transparent));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.snackbar_background_color));
         TextView textView = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(context, R.color.button_text_color));
         snackbar.show();
