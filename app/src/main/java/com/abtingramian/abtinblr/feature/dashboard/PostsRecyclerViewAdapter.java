@@ -12,16 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.abtingramian.abtinblr.R;
+import com.abtingramian.abtinblr.model.PostItem;
 import com.bumptech.glide.Glide;
-import com.tumblr.jumblr.types.AnswerPost;
-import com.tumblr.jumblr.types.AudioPost;
-import com.tumblr.jumblr.types.ChatPost;
-import com.tumblr.jumblr.types.LinkPost;
-import com.tumblr.jumblr.types.PhotoPost;
-import com.tumblr.jumblr.types.Post;
-import com.tumblr.jumblr.types.QuotePost;
-import com.tumblr.jumblr.types.TextPost;
-import com.tumblr.jumblr.types.VideoPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecyclerViewAdapter.ViewHolder> {
 
-    private List<Post> postList = new ArrayList<>();
+    private List<PostItem> postList = new ArrayList<>();
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,7 +45,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
         return postList.size();
     }
 
-    public void setAllItems(List<Post> posts) {
+    public void setAllItems(List<PostItem> posts) {
         this.postList.clear();
         if (posts != null && !posts.isEmpty()) {
             this.postList = posts;
@@ -61,20 +53,20 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
         notifyDataSetChanged();
     }
 
-    public Post getItem(int position) {
+    public PostItem getItem(int position) {
         return position >= 0 && position < postList.size() ? postList.get(position) : null;
     }
 
-    public List<Post> getAllItems() {
+    public List<PostItem> getAllItems() {
         return postList;
     }
 
-    public void addItem(@NonNull Post post) {
+    public void addItem(@NonNull PostItem post) {
         postList.add(post);
         notifyItemInserted(postList.size() - 1);
     }
 
-    public void addItems(List<Post> posts) {
+    public void addItems(List<PostItem> posts) {
         int rangeStart = getItemCount();
         postList.addAll(posts);
         notifyItemRangeInserted(rangeStart, posts.size());
@@ -103,54 +95,26 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             ButterKnife.bind(this, itemView);
         }
 
-        public void configure(final Post post) {
+        public void configure(final PostItem post) {
             // set blog name
             author.setText(post.getBlogName());
-            // common vars
-            String titleText = "";
-            String bodyText = null;
-            String imageUrl = "";
-            // set content based on post type
-            if (post instanceof PhotoPost) {
-                PhotoPost photoPost = (PhotoPost) post;
-                imageUrl = photoPost.getPhotos().get(0).getSizes().get(0).getUrl();
-                bodyText = photoPost.getCaption();
-            } else if (post instanceof VideoPost) {
-                VideoPost videoPost = (VideoPost) post;
-                imageUrl = videoPost.getThumbnailUrl();
-                bodyText = videoPost.getCaption();
-            } else if (post instanceof TextPost) {
-                TextPost textPost = (TextPost) post;
-                titleText = textPost.getTitle();
-                bodyText = textPost.getBody();
-            } else if (post instanceof LinkPost) {
-                // TODO
-            } else if (post instanceof AudioPost) {
-                // TODO
-            } else if (post instanceof QuotePost) {
-                // TODO
-            } else if (post instanceof ChatPost) {
-                // TODO
-            } else if (post instanceof AnswerPost) {
-                // TODO
-            }
             // load content and set visibility based on vars
-            if (!TextUtils.isEmpty(titleText)) {
-                title.setText(titleText);
+            if (!TextUtils.isEmpty(post.getTitle())) {
+                title.setText(post.getTitle());
                 title.setVisibility(View.VISIBLE);
             } else {
                 title.setVisibility(View.GONE);
             }
-            if (!TextUtils.isEmpty(bodyText)) {
-                body.setText(Html.fromHtml(bodyText));
+            if (!TextUtils.isEmpty(post.getBody())) {
+                body.setText(Html.fromHtml(post.getBody()));
                 body.setVisibility(View.VISIBLE);
             } else {
                 body.setVisibility(View.GONE);
             }
-            if (!TextUtils.isEmpty(imageUrl)) {
+            if (!TextUtils.isEmpty(post.getImageUrl())) {
                 image.setVisibility(View.VISIBLE);
                 Glide.with(itemView.getContext())
-                        .load(imageUrl)
+                        .load(post.getImageUrl())
                         .placeholder(R.color.placeholder_color)
                         .error(R.color.placeholder_color)
                         .fitCenter()

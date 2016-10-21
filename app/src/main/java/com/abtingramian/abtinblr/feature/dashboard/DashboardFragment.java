@@ -13,18 +13,22 @@ import android.view.ViewGroup;
 import com.abtingramian.abtinblr.R;
 import com.abtingramian.abtinblr.base.BaseFragment;
 import com.abtingramian.abtinblr.base.SingleFragmentActivity;
+import com.abtingramian.abtinblr.cache.PostCache;
 import com.abtingramian.abtinblr.feature.home.HomeActivity;
+import com.abtingramian.abtinblr.model.PostItem;
 import com.abtingramian.abtinblr.util.SnackbarUtil;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.Post;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindString;
 import butterknife.BindView;
+import de.devland.esperandro.Esperandro;
 
 public class DashboardFragment extends BaseFragment implements SingleFragmentActivity.IFab {
 
@@ -47,12 +51,19 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
     int offset = 0;
     int limit = 20;
     boolean isFetchingPosts = false;
+    PostCache postCache;
 
     public static DashboardFragment newInstance() {
         Bundle args = new Bundle();
         DashboardFragment fragment = new DashboardFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        postCache = Esperandro.getPreferences(PostCache.class, getContext().getApplicationContext());
     }
 
     @Nullable
@@ -94,8 +105,8 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
         // request options map
         options.put("limit", limit);
         options.put("offset", offset);
-        // request for posts
-        fetchPosts();
+        // intitial load
+        performInitialLoad();
         // swipe refresh
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -112,9 +123,42 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
 
     }
 
+    private void performInitialLoad() {
+        new AsyncTask<Void, Void, List<PostItem>>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                recyclerView.setVisibility(View.GONE);
+                loading.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected List<PostItem> doInBackground(Void... params) {
+                // check for posts in cache
+                return postCache.postList();
+            }
+
+            @Override
+            protected void onPostExecute(List<PostItem> posts) {
+                super.onPostExecute(posts);
+                recyclerView.setVisibility(View.VISIBLE);
+                loading.setVisibility(View.GONE);
+                if (posts != null && !posts.isEmpty()) {
+                    // load from cache
+                    postsAdapter.setAllItems(posts);
+                    offset = posts.size();
+                } else {
+                    // network request
+                    fetchPosts();
+                }
+            }
+        }.execute();
+    }
+
     private void fetchPosts() {
         isFetchingPosts = true;
-        new AsyncTask<Void, Void, List<Post>>() {
+        new AsyncTask<Void, Void, List<PostItem>>() {
 
             @Override
             protected void onPreExecute() {
@@ -126,17 +170,38 @@ public class DashboardFragment extends BaseFragment implements SingleFragmentAct
             }
 
             @Override
-            protected List<Post> doInBackground(Void... params) {
+            protected List<PostItem> doInBackground(Void... params) {
                 options.put("offset", offset);
-                return client != null ? client.blogPosts(TEST_BLOG, options) : null;
+                List<Post> posts = null;
+                try {
+                    posts = client != null ? client.blogPosts(TEST_BLOG, options) : null;
+                }
+                catch (Exception e) {
+                    // most likely oauth connection exception due to no network
+                    // but catching all in case since Jumblr is largely an unknown
+                    e.printStackTrace();
+                }
+                // convert and cache posts
+                List<PostItem> postItems = new ArrayList();
+                if (posts != null && !posts.isEmpty()) {
+                    // convert
+                    for (Post post : posts) {
+                        postItems.add(new PostItem(post));
+                    }
+                    // cache
+                    List<PostItem> all = postsAdapter.getAllItems();
+                    all.addAll(postItems);
+                    postCache.postList(new ArrayList<>(all));
+                }
+                return postItems;
             }
 
             @Override
-            protected void onPostExecute(List<Post> posts) {
+            protected void onPostExecute(List<PostItem> posts) {
                 super.onPostExecute(posts);
                 if (posts != null && !posts.isEmpty()) {
                     if (offset == 0) {
-                        // replace since this is the intial load or swipe to refresh
+                        // replace since this is the initial load or swipe to refresh
                         postsAdapter.setAllItems(posts);
                     } else {
                         // append to bottom
